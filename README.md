@@ -4,7 +4,7 @@ Shiroplot is a Python visualization library inspired with seaborn.
 ## Installation
 Use pip
 ```
-pip install git+https://github.com/shiro46-app/shiroplot
+pip install git+https://github.com/shiro46mt/shiroplot
 ```
 
 ## Usage
