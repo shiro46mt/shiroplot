@@ -14,7 +14,8 @@ pip install git+https://github.com/shiro46mt/shiroplot
 import seaborn as sns
 df = sns.load_dataset('healthexp')
 
-sp.slopechart(data=df, x='Year', y='Life_Expectancy', group='Country', x_items=[2018, 2019, 2020], fmt='{:.1f}')
+import shiroplot as splt
+splt.slopechart(data=df, x='Year', y='Life_Expectancy', group='Country', x_items=[2018, 2019, 2020], fmt='{:.1f}')
 ```
 ![slopechart-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/slopechart-01.png)
 
