@@ -43,7 +43,7 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
         series.append(
             data.query(f"{group} in @lebel and {x} == @xi")[y].to_list()
         )
-        x_values.append(i*2 + 1)
+        x_values.append(1 + i * 2 / (len(x_items)-1))
 
     # Line colors
     colors = []
@@ -67,7 +67,7 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
 
     # Vertical Lines
     for x_val in x_values:
-        ax.axvline(x=x_val, color=default_color, alpha=0.7, linewidth=1, linestyle='dotted')
+        ax.axvline(x=x_val, ymin=0.02, ymax=0.98, color=default_color, alpha=0.7, linewidth=1, linestyle='dotted')
 
     # Points
     for ser, x_val in zip(series, x_values):
@@ -87,11 +87,14 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
 
     # Decoration
     ax.set_title(y, fontdict={'size':22})
-    ax.set(xlim=(0, len(x_items)*2))
+    ax.set(xlim=(x_values[0] - 1, x_values[-1] + 1))
     ax.set_xticks(x_values)
     ax.set_xticklabels(x_items)
     for item in ([ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
         item.set_fontsize(14)
     ax.grid(visible=False)
+    for pos in ['top', 'bottom', 'right']:
+        ax.spines[pos].set_visible(False)
+    ax.xaxis.set_ticks_position('none')
 
     return ax
