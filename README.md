@@ -1,5 +1,5 @@
 # shiroplot
-Shiroplot is a Python visualization library inspired with seaborn.
+Shiroplot is a Python visualization library inspired by seaborn.
 
 ## Installation
 Use pip
@@ -10,7 +10,7 @@ pip install git+https://github.com/shiro46mt/shiroplot
 ## Usage
 
 ### Slope chart
-```
+```python
 import seaborn as sns
 df = sns.load_dataset('healthexp')
 

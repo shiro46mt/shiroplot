@@ -23,7 +23,7 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
         fmt (string, optional):
             Format string of annotations.
             Defaults to '{:.0f}'.
-        ax (_type_, optional):
+        ax (`matplotlib.axes.Axes`, optional):
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
     Returns:
