@@ -19,5 +19,15 @@ splt.slopechart(data=df, x='Year', y='Life_Expectancy', group='Country', x_items
 ```
 ![slopechart-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/slopechart-01.png)
 
+### Dumbbell chart
+```python
+import seaborn as sns
+df = sns.load_dataset('healthexp')
+
+import shiroplot as splt
+splt.dumbbellchart(data=df, group='Year', x='Life_Expectancy', y='Country', group_items=[2019, 2020], ax=ax)
+```
+![dumbbellchart-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/dumbbellchart-01.png)
+
 ## Reference
 https://www.machinelearningplus.com/plots/top-50-matplotlib-visualizations-the-master-plots-python/
