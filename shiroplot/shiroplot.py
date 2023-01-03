@@ -1,6 +1,45 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+from collections.abc import Iterable
+
+
+def highlightplot(func, data, hue, highlights, color='gray', **kwargs):
+    """Draw seaborn chart, highlighting the specific items.
+
+    Args:
+        func (functions of `seaborn`):
+            Plotting function defined in `seaborn` function interface.
+        data (`pandas.DataFrame`):
+            Input data should be a long form.
+        hue (keys in `data`):
+            Grouping variable that will produce points with different colors. Can be either categorical or numeric, although color mapping will behave differently in latter case.
+        highlights (str / vector of str):
+            Specify the highlighted items for categorical levels of the `hue` semantic.
+        color (str, optional):
+            Colors of the non-highlighted markers.
+            Defaults to 'gray'.
+
+    Returns:
+        `matplotlib.axes.Axes`: The matplotlib axes containing the plot.
+    """
+
+    if isinstance(highlights, (str, int)):
+        data_hl = data[data[hue] == highlights].copy()
+    elif isinstance(highlights, Iterable):
+        data_hl = data[data[hue].isin(highlights)].copy()
+    else:
+        assert False, '`highlight` must be str or vector of str'
+
+    try:
+        data_hl[hue] = data_hl[hue].cat.remove_unused_categories()
+    except AttributeError:
+        pass
+
+    func(data=data, color=color, **kwargs)
+    func(data=data_hl, hue=hue, **kwargs)
+
+    return plt.gca()
 
 
 def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', decreasing_color='tab:blue', fmt='{:.0f}', ax=None):

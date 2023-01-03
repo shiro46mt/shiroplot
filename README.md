@@ -9,6 +9,41 @@ pip install git+https://github.com/shiro46mt/shiroplot
 
 ## Usage
 
+### Highlight chart
+Draw seaborn chart, highlighting the specific items.
+
+#### 📊 Scatter plot with highlight
+```python
+import seaborn as sns
+df = sns.load_dataset('tips')
+
+import shiroplot as splt
+splt.highlightplot(func=sns.scatterplot, data=df, x='total_bill', y='tip', hue='day', highlights=['Sat', 'Sun'], ax=ax)
+```
+![highlight-scatterplot-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/highlight-scatterplot-01.png)
+
+#### 📊 Line plot with highlight
+```python
+import seaborn as sns
+df = sns.load_dataset('healthexp')
+
+import shiroplot as splt
+splt.highlightplot(func=sns.lineplot, data=df, x='Year', y='Life_Expectancy', hue='Country', highlights=['Japan', 'USA'], ax=ax)
+```
+![highlight-lineplot-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/highlight-lineplot-01.png)
+
+#### 📊 Histgram with highlight
+```python
+import seaborn as sns
+df = sns.load_dataset('penguins')
+
+import shiroplot as splt
+splt.highlightplot(func=sns.histplot, data=df, x='flipper_length_mm', hue='species', highlights='Adelie', binwidth=3, ax=ax)
+```
+![highlight-histplot-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/highlight-histplot-01.png)
+
+---
+
 ### Slope chart
 ```python
 import seaborn as sns
