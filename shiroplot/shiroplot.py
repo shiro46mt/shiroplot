@@ -42,7 +42,7 @@ def highlightplot(func, data, hue, highlights, color='gray', **kwargs):
     return plt.gca()
 
 
-def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', decreasing_color='tab:blue', fmt='{:.0f}', ax=None):
+def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', fmt='{:.0f}', margin=0, ax=None):
     """Draw a slope chart.
 
     Args:
@@ -55,21 +55,25 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
         x_items (vector of strings, optional):
             Specify the levels and the order of plotting for the `x` semantic.
             Defaults to the all values in `x`.
-        increasing_color, decreasing_color (strings, optional):
+        increase_color, decrease_color, even_color (strings, optional):
             Colors of the lines and the markers.
-            Increasing/decreasing will be determined from the first values and the last values.
-            Defaults to 'tab:orange' as increasing, or 'tab:blue' as decreasing.
+            Increase/decrease will be determined from the first values and the last values.
+            Defaults to 'tab:red' as increase, 'tab:blue' as decrease, or 'dimgray' as even.
         fmt (string, optional):
             Format string of annotations.
             Defaults to '{:.0f}'.
+        margin (float, optional):
+            When the difference between the first value and the last value is within `margin`, 
+            colors of the lines and the markers are `even_color`.
+            If margin is under 0, it will be set as 0.
+            Defaults to 0.
         ax (`matplotlib.axes.Axes`, optional):
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
     Returns:
-        `matplotlib.axes.Axes`: The matplotlib axes containing the plot.
+        `matplotlib.axes.Axes`: 
+            The matplotlib axes containing the plot.
     """
-
-    default_color = 'black'
 
     if x_items is None:
         x_items = sorted(data[x].dropna().unique())
@@ -86,16 +90,16 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
 
     # Line colors
     colors = []
+    margin = max(margin, 0)
     for y0, y1, c in zip(series[0], series[-1], lebel):
-        if y1 > y0:
-            colors.append(increasing_color)
-        elif y1 < y0:
-            colors.append(decreasing_color)
+        if y1 > y0 + margin:
+            colors.append(increase_color)
+        elif y1 < y0 - margin:
+            colors.append(decrease_color)
         else:
-            colors.append(default_color)
+            colors.append(even_color)
 
-
-    def newline(p1, p2, color=default_color):
+    def newline(p1, p2, color):
         ax_ = plt.gca()
         l = mlines.Line2D([p1[0], p2[0]], [p1[1], p2[1]], color=color, marker='o', markersize=6)
         ax_.add_line(l)
@@ -106,11 +110,11 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
 
     # Vertical Lines
     for x_val in x_values:
-        ax.axvline(x=x_val, ymin=0.02, ymax=0.98, color=default_color, alpha=0.7, linewidth=1, linestyle='dotted')
+        ax.axvline(x=x_val, ymin=0.02, ymax=0.98, color='black', alpha=0.7, linewidth=1, linestyle='dotted')
 
     # Points
     for ser, x_val in zip(series, x_values):
-        ax.scatter(y=ser, x=[x_val] * len(lebel), s=10, color=default_color, alpha=0.7)
+        ax.scatter(y=ser, x=[x_val] * len(lebel), s=10, color=even_color, alpha=0.7)
 
     # Line Segments
     for k in range(len(x_items)-1):
@@ -119,9 +123,9 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
 
     # Annotation
     for p1, p2, c in zip(series[0], series[-1], lebel):
-        if p1:
+        if p1 > 0:
             ax.text(x_values[0] - 0.05, p1, f'{c}, {fmt.format(p1)}', ha='right', va='center', fontdict={'size':14})
-        if p2:
+        if p2 > 0:
             ax.text(x_values[-1] + 0.05, p2, f'{c}, {fmt.format(p2)}', ha='left', va='center', fontdict={'size':14})
 
     # Decoration
@@ -134,12 +138,13 @@ def slopechart(data, x, y, group, x_items=None, increasing_color='tab:orange', d
     ax.grid(visible=False)
     for pos in ['top', 'bottom', 'right']:
         ax.spines[pos].set_visible(False)
+    ax.spines['left'].set_visible(True)
     ax.xaxis.set_ticks_position('none')
 
     return ax
 
 
-def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', after_color='tab:orange', ax=None):
+def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', after_color='tab:red', ax=None):
     """Draw a dumbbell chart.
 
     Args:
@@ -155,15 +160,16 @@ def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', a
             Specify BEFORE and AFTER for categorical levels of the `group` semantic.
             It must be iterable, and the length of it must be 2.
             Defaults to the all values in `group`.
-        before_color, after_color (str, optional): _description_. Defaults to 'tab:orange'.
+        before_color, after_color (str, optional):
             Colors of the markers.
             The color of lines between markers is the same as `before_color`.
-            Defaults to 'dimgray' as BEFORE, or 'tab:orange' as AFTER.
+            Defaults to 'dimgray' as BEFORE, or 'tab:red' as AFTER.
         ax (`matplotlib.axes.Axes`, optional):
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
     Returns:
-        `matplotlib.axes.Axes`: The matplotlib axes containing the plot.
+        `matplotlib.axes.Axes`: 
+            The matplotlib axes containing the plot.
     """
 
     if group_items is None:
