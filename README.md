@@ -64,5 +64,8 @@ splt.dumbbellchart(data=df, group='Year', x='Life_Expectancy', y='Country', grou
 ```
 ![dumbbellchart-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/dumbbellchart-01.png)
 
+# License
+This software is released under the MIT License, see LICENSE.
+
 ## Reference
 https://www.machinelearningplus.com/plots/top-50-matplotlib-visualizations-the-master-plots-python/
