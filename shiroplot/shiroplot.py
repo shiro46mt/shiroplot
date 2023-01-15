@@ -1,45 +1,5 @@
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
-from collections.abc import Iterable
-
-
-def highlightplot(func, data, hue, highlights, color='gray', **kwargs):
-    """Draw seaborn chart, highlighting the specific items.
-
-    Args:
-        func (functions of `seaborn`):
-            Plotting function defined in `seaborn` function interface.
-        data (`pandas.DataFrame`):
-            Input data should be a long form.
-        hue (keys in `data`):
-            Grouping variable that will produce points with different colors. Can be either categorical or numeric, although color mapping will behave differently in latter case.
-        highlights (str / vector of str):
-            Specify the highlighted items for categorical levels of the `hue` semantic.
-        color (str, optional):
-            Colors of the non-highlighted markers.
-            Defaults to 'gray'.
-
-    Returns:
-        `matplotlib.axes.Axes`: The matplotlib axes containing the plot.
-    """
-
-    if isinstance(highlights, (str, int)):
-        data_hl = data[data[hue] == highlights].copy()
-    elif isinstance(highlights, Iterable):
-        data_hl = data[data[hue].isin(highlights)].copy()
-    else:
-        assert False, '`highlight` must be str or vector of str'
-
-    try:
-        data_hl[hue] = data_hl[hue].cat.remove_unused_categories()
-    except AttributeError:
-        pass
-
-    func(data=data, color=color, **kwargs)
-    func(data=data_hl, hue=hue, **kwargs)
-
-    return plt.gca()
 
 
 def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', fmt='{:.0f}', margin=0, ax=None):
@@ -63,7 +23,7 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
             Format string of annotations.
             Defaults to '{:.0f}'.
         margin (float, optional):
-            When the difference between the first value and the last value is within `margin`, 
+            When the difference between the first value and the last value is within `margin`,
             colors of the lines and the markers are `even_color`.
             If margin is under 0, it will be set as 0.
             Defaults to 0.
@@ -71,7 +31,7 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
     Returns:
-        `matplotlib.axes.Axes`: 
+        `matplotlib.axes.Axes`:
             The matplotlib axes containing the plot.
     """
 
@@ -168,7 +128,7 @@ def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', a
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
     Returns:
-        `matplotlib.axes.Axes`: 
+        `matplotlib.axes.Axes`:
             The matplotlib axes containing the plot.
     """
 

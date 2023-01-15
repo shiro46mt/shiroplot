@@ -12,6 +12,6 @@ setup(
     description='Shiroplot is a Python visualization library inspired by seaborn.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    install_requires=['matplotlib'],
+    install_requires=['matplotlib', 'seaborn'],
     packages=find_packages()
 )
