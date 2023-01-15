@@ -21,7 +21,7 @@ import seaborn as sns
 df = sns.load_dataset('tips')
 
 import shiroplot as splt
-splt.scatterplot(data=df, x='total_bill', y='tip', hue='day', highlights=['Sat', 'Sun'], ax=ax)
+splt.scatterplot(data=df, x='total_bill', y='tip', hue='day', highlights=['Sat', 'Sun'])
 ```
 ![highlight-scatterplot-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/highlight-scatterplot-01.png)
 
@@ -31,7 +31,7 @@ import seaborn as sns
 df = sns.load_dataset('healthexp')
 
 import shiroplot as splt
-splt.lineplot(data=df, x='Year', y='Life_Expectancy', hue='Country', highlights=['Japan', 'USA'], ax=ax)
+splt.lineplot(data=df, x='Year', y='Life_Expectancy', hue='Country', highlights=['Japan', 'USA'])
 ```
 ![highlight-lineplot-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/highlight-lineplot-01.png)
 
@@ -41,7 +41,7 @@ import seaborn as sns
 df = sns.load_dataset('penguins')
 
 import shiroplot as splt
-splt.histplot(data=df, x='flipper_length_mm', hue='species', highlights='Adelie', ax=ax)
+splt.histplot(data=df, x='flipper_length_mm', hue='species', highlights='Adelie')
 ```
 ![highlight-histplot-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/highlight-histplot-01.png)
 
