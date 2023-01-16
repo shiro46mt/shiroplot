@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 
-def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', fmt='{:.0f}', margin=0, ax=None):
+def slopechart(data, *, x, y, group, x_items=None,
+    increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', size=50, fmt='{:.0f}', margin=0, ax=None):
     """Draw a slope chart.
 
     Args:
@@ -19,12 +20,15 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
             Colors of the lines and the markers.
             Increase/decrease will be determined from the first values and the last values.
             Defaults to 'tab:red' as increase, 'tab:blue' as decrease, or 'dimgray' as even.
+        size (float, optional):
+            The marker size in points**2 (typographic points are 1/72 in.).
+            Defaults to 50.
         fmt (string, optional):
             Format string of annotations.
             Defaults to '{:.0f}'.
         margin (float, optional):
             When the difference between the first value and the last value is within `margin`,
-            colors of the lines and the markers are `even_color`.
+            the two values are considered equal, whose colors are `even_color`.
             If margin is under 0, it will be set as 0.
             Defaults to 0.
         ax (`matplotlib.axes.Axes`, optional):
@@ -61,12 +65,12 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
 
     def newline(p1, p2, color):
         ax_ = plt.gca()
-        l = mlines.Line2D([p1[0], p2[0]], [p1[1], p2[1]], color=color, marker='o', markersize=6)
+        l = mlines.Line2D([p1[0], p2[0]], [p1[1], p2[1]], color=color)
         ax_.add_line(l)
         return l
 
     if ax is None:
-        _, ax = plt.subplots(1, 1, figsize=(14,14))
+        _, ax = plt.subplots(1, 1, figsize=(8, 8))
 
     # Vertical Lines
     for x_val in x_values:
@@ -74,7 +78,7 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
 
     # Points
     for ser, x_val in zip(series, x_values):
-        ax.scatter(y=ser, x=[x_val] * len(lebel), s=10, color=even_color, alpha=0.7)
+        ax.scatter(y=ser, x=[x_val] * len(lebel), s=size, color=colors, zorder=10)
 
     # Line Segments
     for k in range(len(x_items)-1):
@@ -84,18 +88,16 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
     # Annotation
     for p1, p2, c in zip(series[0], series[-1], lebel):
         if p1 > 0:
-            ax.text(x_values[0] - 0.05, p1, f'{c}, {fmt.format(p1)}', ha='right', va='center', fontdict={'size':14})
+            ax.text(x_values[0] - 0.05, p1, f'{c}, {fmt.format(p1)}', ha='right', va='center')
         if p2 > 0:
-            ax.text(x_values[-1] + 0.05, p2, f'{c}, {fmt.format(p2)}', ha='left', va='center', fontdict={'size':14})
+            ax.text(x_values[-1] + 0.05, p2, f'{c}, {fmt.format(p2)}', ha='left', va='center')
 
     # Decoration
-    ax.set_title(y, fontdict={'size':22})
+    ax.set_title(y)
     ax.set(xlim=(x_values[0] - 1, x_values[-1] + 1))
     ax.set_xticks(x_values)
     ax.set_xticklabels(x_items)
-    for item in ([ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
-        item.set_fontsize(14)
-    ax.grid(visible=False)
+    ax.grid(False)
     for pos in ['top', 'bottom', 'right']:
         ax.spines[pos].set_visible(False)
     ax.spines['left'].set_visible(True)
@@ -104,7 +106,8 @@ def slopechart(data, x, y, group, x_items=None, increase_color='tab:red', decrea
     return ax
 
 
-def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', after_color='tab:red', ax=None):
+def dumbbellchart(data, *, x, y, group, group_items=None,
+    beforecolor='dimgray', aftercolor='tab:red', edgecolor='gray', size=50, ax=None):
     """Draw a dumbbell chart.
 
     Args:
@@ -120,10 +123,12 @@ def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', a
             Specify BEFORE and AFTER for categorical levels of the `group` semantic.
             It must be iterable, and the length of it must be 2.
             Defaults to the all values in `group`.
-        before_color, after_color (str, optional):
-            Colors of the markers.
-            The color of lines between markers is the same as `before_color`.
-            Defaults to 'dimgray' as BEFORE, or 'tab:red' as AFTER.
+        beforecolor, aftercolor, edgecolor (str, optional):
+            Colors of the markers and the lines.
+            Defaults to 'dimgray' as BEFORE, 'tab:red' as AFTER, or 'gray' as EDGE.
+        size (float, optional):
+            The marker size in points**2 (typographic points are 1/72 in.).
+            Defaults to 50.
         ax (`matplotlib.axes.Axes`, optional):
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
@@ -147,34 +152,32 @@ def dumbbellchart(data, x, y, group, group_items=None, before_color='dimgray', a
 
     def newline(p1, p2):
         ax_ = plt.gca()
-        l = mlines.Line2D([p1[0], p2[0]], [p1[1], p2[1]], color=before_color)
+        l = mlines.Line2D([p1[0], p2[0]], [p1[1], p2[1]], color=edgecolor)
         ax_.add_line(l)
         return l
 
     if ax is None:
-        _, ax = plt.subplots(1, 1, figsize=(14, 14))
+        _, ax = plt.subplots(1, 1, figsize=(8, 8))
 
     # Points
-    ax.scatter(y=_data.index, x=_data[group_items[0]], s=50, color=before_color, label=group_items[0], zorder=10)
-    ax.scatter(y=_data.index, x=_data[group_items[1]], s=50, color=after_color, label=group_items[1], zorder=11)
+    ax.scatter(y=_data.index, x=_data[group_items[0]], s=size, color=beforecolor, label=group_items[0], zorder=10)
+    ax.scatter(y=_data.index, x=_data[group_items[1]], s=size, color=aftercolor, label=group_items[1], zorder=11)
 
     # Line Segments
     for i, p1, p2 in zip(_data.index, _data[group_items[0]], _data[group_items[1]]):
         newline([p1, i], [p2, i])
 
     # Decoration
-    ax.set_title(f"{x} - {group_items[0]} vs {group_items[1]}", fontdict={'size':22})
+    ax.set_title(f"{x} - {group_items[0]} vs {group_items[1]}")
     ax.set(ylim=(-0.5, len(_data)-0.5))
     ax.set_yticks(_data.index.to_list())
     ax.set_yticklabels(_data[y])
-    for item in ([ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
-        item.set_fontsize(14)
     ax.grid(axis='x')
     for pos in ['top', 'bottom', 'left', 'right']:
         ax.spines[pos].set_visible(False)
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
-    ax.legend(loc='lower right', fontsize=14)
+    ax.legend(loc='lower right')
 
     return ax
 

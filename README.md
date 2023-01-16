@@ -56,7 +56,8 @@ import seaborn as sns
 df = sns.load_dataset('healthexp')
 
 import shiroplot as splt
-splt.slopechart(data=df, x='Year', y='Life_Expectancy', group='Country', x_items=[2018, 2020], fmt='{:.1f}')
+splt.slopechart(data=df, x='Year', y='Life_Expectancy', group='Country', x_items=[2018, 2020],
+    increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', size=50, fmt='{:.1f}', margin=0.2)
 ```
 ![slopechart-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/slopechart-01.png)
 
@@ -66,7 +67,8 @@ import seaborn as sns
 df = sns.load_dataset('healthexp')
 
 import shiroplot as splt
-splt.dumbbellchart(data=df, group='Year', x='Life_Expectancy', y='Country', group_items=[2019, 2020], ax=ax)
+splt.dumbbellchart(data=df, group='Year', x='Life_Expectancy', y='Country', group_items=[2019, 2020],
+    beforecolor='dimgray', aftercolor='tab:red', edgecolor='gray', size=50)
 ```
 ![dumbbellchart-01](https://raw.githubusercontent.com/shiro46mt/shiroplot/images/dumbbellchart-01.png)
 
