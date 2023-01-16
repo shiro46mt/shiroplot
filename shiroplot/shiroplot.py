@@ -3,7 +3,7 @@ import matplotlib.lines as mlines
 
 
 def slopechart(data, *, x, y, group, x_items=None,
-    increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', size=50, fmt='{:.0f}', margin=0, ax=None):
+    increase_color='tab:red', decrease_color='tab:blue', even_color='dimgray', size=8, fmt='{:.0f}', margin=0, ax=None):
     """Draw a slope chart.
 
     Args:
@@ -21,8 +21,8 @@ def slopechart(data, *, x, y, group, x_items=None,
             Increase/decrease will be determined from the first values and the last values.
             Defaults to 'tab:red' as increase, 'tab:blue' as decrease, or 'dimgray' as even.
         size (float, optional):
-            The marker size in points**2 (typographic points are 1/72 in.).
-            Defaults to 50.
+            Radius of the markers, in points.
+            Defaults to 8.
         fmt (string, optional):
             Format string of annotations.
             Defaults to '{:.0f}'.
@@ -78,7 +78,7 @@ def slopechart(data, *, x, y, group, x_items=None,
 
     # Points
     for ser, x_val in zip(series, x_values):
-        ax.scatter(y=ser, x=[x_val] * len(lebel), s=size, color=colors, zorder=10)
+        ax.scatter(y=ser, x=[x_val] * len(lebel), s=size**2, color=colors, zorder=10)
 
     # Line Segments
     for k in range(len(x_items)-1):
@@ -107,7 +107,7 @@ def slopechart(data, *, x, y, group, x_items=None,
 
 
 def dumbbellchart(data, *, x, y, group, group_items=None,
-    beforecolor='dimgray', aftercolor='tab:red', edgecolor='gray', size=50, ax=None):
+    beforecolor='dimgray', aftercolor='tab:red', edgecolor='gray', size=8, ax=None):
     """Draw a dumbbell chart.
 
     Args:
@@ -127,8 +127,8 @@ def dumbbellchart(data, *, x, y, group, group_items=None,
             Colors of the markers and the lines.
             Defaults to 'dimgray' as BEFORE, 'tab:red' as AFTER, or 'gray' as EDGE.
         size (float, optional):
-            The marker size in points**2 (typographic points are 1/72 in.).
-            Defaults to 50.
+            Radius of the markers, in points.
+            Defaults to 8.
         ax (`matplotlib.axes.Axes`, optional):
             Pre-existing axes for the plot. Otherwise, generate new figure internally.
 
@@ -160,8 +160,8 @@ def dumbbellchart(data, *, x, y, group, group_items=None,
         _, ax = plt.subplots(1, 1, figsize=(8, 8))
 
     # Points
-    ax.scatter(y=_data.index, x=_data[group_items[0]], s=size, color=beforecolor, label=group_items[0], zorder=10)
-    ax.scatter(y=_data.index, x=_data[group_items[1]], s=size, color=aftercolor, label=group_items[1], zorder=11)
+    ax.scatter(y=_data.index, x=_data[group_items[0]], s=size**2, color=beforecolor, label=group_items[0], zorder=10)
+    ax.scatter(y=_data.index, x=_data[group_items[1]], s=size**2, color=aftercolor, label=group_items[1], zorder=11)
 
     # Line Segments
     for i, p1, p2 in zip(_data.index, _data[group_items[0]], _data[group_items[1]]):
