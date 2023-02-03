@@ -41,14 +41,14 @@ def slopechart(data, *, x, y, group, x_items=None,
 
     if x_items is None:
         x_items = sorted(data[x].dropna().unique())
-    lebel = data.query(f"{x} in @x_items")[group].value_counts().loc[lambda x: x == len(x_items)].index.to_list()
+    lebel = data.query(f"{x} in @x_items")[group].value_counts(sort=False).loc[lambda x: x == len(x_items)].index.to_list()
 
     # Data to points
     series = []
     x_values = []
     for i, xi in enumerate(x_items):
         series.append(
-            data.query(f"{group} in @lebel and {x} == @xi")[y].to_list()
+            data.query(f"{group} in @lebel and {x} == @xi").set_index(group).loc[lebel, y].to_list()
         )
         x_values.append(1 + i * 2 / (len(x_items)-1))
 
